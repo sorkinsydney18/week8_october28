@@ -321,9 +321,55 @@ ClassExperiment <- read_csv('Oct28ClassData.csv')
 ### Part a 
 **For at least one of the individual affect items, the in-party and out-party affect averages, and the average affect difference, report average values for the treatment and control groups, an estimate of the difference between those groups, and the results of a test for statistical significance. Did imagined social contact change your classmates' affect toward members of the opposing party? Their own party? What about their affective polarization?**
 
+```{r, q4 part a}
+
+
+ClassExperiment %>% 
+  group_by(Treated) %>% 
+  summarise(mean(InPartyAffect_1),
+            mean(OutPartyAffect_1, na.rm = TRUE),
+            mean(AffectDiff_1, na.rm = TRUE))
+
+difference_in_means(InPartyAffect_1 ~ Treated, data = ClassExperiment)
+difference_in_means(OutPartyAffect_1 ~ Treated, data = ClassExperiment)
+difference_in_means(AffectDiff_1 ~ Treated, data = ClassExperiment)
+
+
+cohen.d(InPartyAffect_1 ~ Treated, data = ClassExperiment)
+cohen.d(OutPartyAffect_1 ~ Treated, data = ClassExperiment)
+cohen.d(AffectDiff_1 ~ Treated, data = ClassExperiment)
+
+
+```
 
 ### Part b
 **For at least one individual identity trait, the in-party and out-party identity averages, and the average identity difference, report mean values for the treatment and control groups, an estimate of the difference between those groups, and the results of a test for statistical significance. How do the experimental effects of imagined contact on identity traits compare to the effects on affect in the class sample?**
+
+
+```{r, q4 part b}
+
+ClassExperiment %>% 
+  group_by(Treated) %>% 
+  summarise(mean(InPartyIdentity_1),
+            mean(OutPartyIdentity_1),
+            mean(IdentityDiff_1))
+            
+difference_in_means(InPartyIdentity_1 ~ Treated, data = ClassExperiment)
+difference_in_means(OutPartyIdentity_1 ~ Treated, data = ClassExperiment)
+difference_in_means(IdentityDiff_1 ~ Treated, data = ClassExperiment)
+
+
+cohen.d(InPartyIdentity_1 ~ Treated, data = ClassExperiment)
+cohen.d(OutPartyIdentity_1 ~ Treated, data = ClassExperiment)
+cohen.d(IdentityDiff_1 ~ Treated, data = ClassExperiment)
+
+
+
+
+
+
+```
+
 
 
 ## Question 5 
