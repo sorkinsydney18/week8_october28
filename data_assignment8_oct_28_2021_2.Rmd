@@ -150,6 +150,24 @@ cohen.d(PosDiff ~ treated, data = chinajapan)
 
 Wang et al. (2021) also investigate whether imagined social contact changes Chinese students' perception of the characteristics associated with Japanese identiy, as well as the difference in perception of the semantic content associated with Chinese and Japanese identity. They use 30 pairs of opposite phrases (like "frank/hypocritical," "civilized/barbaric," and "peace-loving/belligerent") on scales from 1 to 7 to measure these identity traits (higher scores are less favorable). We've provided you with the averages of these thirty items for perception of Chinese and Japanese identites, as well as the average difference between them. **For all three of these indices, report average values for the treatment and control groups, an estimate of the difference between those groups, and the results of a test for statistical significance. How do the experimental effects of imagined contact on identity traits compare to the effects on affect?**
 
+```{r, q2 part a}
+
+chinajapan %>% 
+  group_by(treated) %>% 
+  summarise(mean(JapanID_avg),
+            mean(ChinaID_avg),
+            mean(ID_diff_avg))
+
+difference_in_means(JapanID_avg ~ treated, data =chinajapan)
+
+difference_in_means(ChinaID_avg ~ treated, data =chinajapan)
+
+difference_in_means(ID_diff_avg ~ treated, data =chinajapan)
+
+
+
+
+```
 
 ### Part b
 
@@ -157,9 +175,9 @@ A useful way to visualize these effects of the experimental treatment is with a 
 
 ```{r}
 # First, store the t-tests as new objects in R
-JapanIDdiff <- difference_in_means(JapanID_avg ~ treated, data = ChinaJapan)
-ChinaIDdiff <- difference_in_means(ChinaID_avg ~ treated, data = ChinaJapan)
-Diff_in_ID_diff <- difference_in_means(ID_diff_avg ~ treated, data = ChinaJapan)
+JapanIDdiff <- difference_in_means(JapanID_avg ~ treated, data = chinajapan)
+ChinaIDdiff <- difference_in_means(ChinaID_avg ~ treated, data = chinajapan)
+Diff_in_ID_diff <- difference_in_means(ID_diff_avg ~ treated, data = chinajapan)
 
 # These objects are called lists; they store values like point estimates and confidence intervals of statistical tests
 
@@ -183,6 +201,45 @@ ggplot(treatment_effect_plot_data, mapping=aes(x=factor(outcomes, levels = outco
 
 **Make your own treatment effects plot to visualize the effect of treatment on all four items associated with affect toward Japanese people and the index averaging those items. Interpret your results.**
 
+```{r, q2 part c}
+
+
+japanPos_diff <- difference_in_means(JapanPos ~ treated, data = chinajapan)
+japanwarm_diff <- difference_in_means(JapanWarm ~ treated, data = chinajapan)
+japanAdmire_diff <- difference_in_means(JapanAdmire ~ treated, data = chinajapan)
+japanRespect_diff <- difference_in_means(JapanRespect ~ treated, data = chinajapan)
+
+
+
+outcomes_jap <- c('Japanese Positivity Affect', 
+                  'Japanese Warm Affect', 
+                  'Japanese Admire Affect', 
+                  'Japanese Respect Affect')
+
+
+pointests_jap <- c(japanPos_diff$coefficients, 
+                   japanwarm_diff$coefficients, 
+                   japanAdmire_diff$coefficients, 
+                   japanRespect_diff$coefficients)
+
+
+lowbounds_jap <- c(japanPos_diff$conf.low, 
+               japanwarm_diff$conf.low,
+               japanAdmire_diff$conf.low,
+               japanRespect_diff$conf.low)
+
+upbounds_jap <- c(japanPos_diff$conf.high, 
+            japanwarm_diff$conf.high,
+            japanAdmire_diff$conf.high,
+            japanRespect_diff$conf.high)
+
+
+japtreatment_effect_plot_data <- tibble(outcomes_jap,pointests_jap,lowbounds_jap,upbounds_jap)
+
+
+ggplot(japtreatment_effect_plot_data, mapping=aes(x=factor(outcomes_jap, levels = outcomes_jap), y=pointests_jap, ymin=lowbounds_jap, ymax=upbounds_jap)) + geom_pointrange() + geom_hline(yintercept = 0, linetype = 'dashed') + coord_flip() + xlab('Experimental Outcomes') + ylab('Treatment Effect (with 95% CI)')
+
+```
 
 ## Question 3: Data Science Question
 
